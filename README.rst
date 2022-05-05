@@ -411,7 +411,7 @@ which means "generate tokens v2, accept tokens v2 and v1".
 Tokens v2
 .........
 
-They contain a primary key, an optional timestamp, and a signature.
+Tokens v2 contain a primary key, an optional timestamp, and a signature.
 
 The signature covers the primary key, the optional timestamp, and the
 revocation key. If the revocation key changes, the signature becomes invalid.
@@ -549,6 +549,16 @@ it, you should regenerate and redistribute tokens after upgrading Django.
 Other workarounds, such as disabling token invalidation on password change or
 using a custom hasher to keep the work factor constant, are discouraged
 because they create security concerns.
+
+**Why do all tokens start with AAAA...?**
+
+This is the Base64 encoding of an integer storing a small value.
+
+By default, Django uses integers as primary keys for users, starting from 1.
+These primary keys are included in tokens, which are encoded with Base64.
+
+When the primary key of the ``User`` model is an ``AutoField``, as long as you
+have less that one million users, all tokens start with AA.
 
 Contributing
 ============
